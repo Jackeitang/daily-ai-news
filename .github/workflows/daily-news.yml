@@ -1,0 +1,17 @@
+name: Daily AI News
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test cloud server
+        run: |
+          echo "============================"
+          echo "Daily AI News"
+          echo "GitHub Actions 云端运行成功"
+          echo "============================"
+          date
