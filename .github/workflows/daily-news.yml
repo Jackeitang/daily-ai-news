@@ -1,7 +1,13 @@
 name: Daily AI News
 
 on:
+  # 可以手动运行
   workflow_dispatch:
+
+  # 每天北京时间 08:00 自动运行
+  schedule:
+    - cron: "0 8 * * *"
+      timezone: "Asia/Shanghai"
 
 jobs:
   daily-news:
