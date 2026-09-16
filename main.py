@@ -2,6 +2,7 @@ import os
 import time
 import calendar
 import feedparser
+import requests
 from datetime import datetime, timezone
 from openai import OpenAI
 
@@ -212,6 +213,41 @@ def summarize_with_deepseek(news):
     return response.choices[0].message.content
 
 
+def send_to_wechat(report):
+
+    sendkey = os.environ.get("SERVERCHAN_SENDKEY")
+
+    if not sendkey:
+        raise ValueError("没有找到 SERVERCHAN_SENDKEY")
+
+    url = f"https://sctapi.ftqq.com/{sendkey}.send"
+
+    data = {
+        "title": "🤖 AI 科技每日早报",
+        "desp": report
+    }
+
+    response = requests.post(
+        url,
+        data=data,
+        timeout=30
+    )
+
+    response.raise_for_status()
+
+    result = response.json()
+
+    print("Server酱返回：", result)
+
+    if result.get("code") != 0:
+        raise RuntimeError(
+            f"微信推送失败：{result}"
+        )
+
+    print("微信推送成功！")
+
+
+
 # =========================
 # 主程序
 # =========================
@@ -253,3 +289,7 @@ if __name__ == "__main__":
     print("=" * 60)
 
     print(report)
+    print()
+    print("正在推送到微信...")
+    
+    send_to_wechat(report)
